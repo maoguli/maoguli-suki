@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>猫谷礼</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            /* 修改为浅粉色背景，柔和不刺眼 */
+            background: #ffe6f0;
+            padding: 40px 20px;
+        }
+        h2 {
+            text-align: center;
+            font-size: 26px;
+            color: #639;
+            margin-bottom: 40px;
+        }
+        /* 分组容器 */
+        .group-wrap {
+            margin-bottom: 50px;
+        }
+        /* 分组小标题 */
+        .group-title {
+            font-size: 20px;
+            color: #724;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        /* 按钮容器：横向一行排列，自动换行 */
+        .btn-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-direction: row;
+            flex-wrap: wrap; /* 宽度不够自动换行 */
+        }
+        .audio-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background: #639;
+            color: white;
+            cursor: pointer;
+            width: 220px;
+            transition: background 0.2s;
+        }
+        .audio-btn:hover {
+            background: #84a;
+        }
+    </style>
+</head>
+<body>
+    <h2>猫谷礼</h2>
+
+    <!-- 第一组 -->
+    <div class="group-wrap">
+        <h3 class="group-title">经典咏流传</h3>
+        <div class="btn-box">
+            <button class="audio-btn" onclick="playAudio('audio1')">哈哈哈哈哈哈</button>
+            <button class="audio-btn" onclick="playAudio('audio2')">你喵你个咪咪</button>
+            <button class="audio-btn" onclick="playAudio('audio3')">你给我爬</button>
+            <button class="audio-btn" onclick="playAudio('audio4')">auv</button>
+        </div>
+    </div>
+
+    <!-- 第二组 -->
+    <div class="group-wrap">
+        <h3 class="group-title">😈</h3>
+        <div class="btn-box">
+            <button class="audio-btn" onclick="playAudio('audio5')">生化危机9😈</button>
+            <button class="audio-btn" onclick="playAudio('audio6')">破防1</button>
+            <button class="audio-btn" onclick="playAudio('audio7')">啊啊啊啊啊啊</button>
+            <button class="audio-btn" onclick="playAudio('audio8')">我讨厌你们</button>
+        </div>
+    </div>
+
+    <!-- 第三组 -->
+    <div class="group-wrap">
+        <h3 class="group-title">哈气</h3>
+        <div class="btn-box">
+            <button class="audio-btn" onclick="playAudio('audio9')">哈气1</button>
+            <button class="audio-btn" onclick="playAudio('audio10')">哈气2</button>
+
+        </div>
+    </div>
+
+    <!-- 音频标签 -->
+    <audio id="audio1" src="sound1.mp3">
+    <audio id="audio2" src="你喵喵你个咪咪.mp3">
+    <audio id="audio3" src="你给我爬.mp3">
+    <audio id="audio4" src="auv.mp3">
+    <audio id="audio5" src="生化危机9.mp3">
+    <audio id="audio6" src="破防1.mp3">
+    <audio id="audio7" src="啊啊啊啊啊啊啊啊.mp3">
+    <audio id="audio8" src="我讨厌你们.mp3">
+    <audio id="audio9" src="哈气1.mp3">
+    <audio id="audio10" src="哈气2.mp3">
+
+
+    <script>
+        let currentAudio = null;
+        function playAudio(id) {
+            const audio = document.getElementById(id);
+            if (!audio) {
+                console.log("找不到音频文件：" + id);
+                return;
+            }
+            // 切换音频停止上一段
+            if(currentAudio && currentAudio !== audio){
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            if(audio.paused){
+                audio.play().catch(err=>{
+                    console.log("播放失败：",err);
+                    alert("点击页面任意位置后再点按钮！");
+                });
+                currentAudio = audio;
+            }else{
+                audio.pause();
+                currentAudio = null;
+            }
+        }
+    </script>
+</body>
+</html>
