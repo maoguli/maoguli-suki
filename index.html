@@ -19,16 +19,6 @@
             min-height: 100vh;
             padding: 40px 15px;
             font-family: "Microsoft YaHei", sans-serif;
-
-            /* 可选全屏背景图，取消注释启用 */
-            /*
-            background-image: url("bg.jpg");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: center;
-            background-size: cover;
-            background-blend-mode: overlay;
-            */
         }
         /* 背景缓慢流动动画 */
         @keyframes bgFlow {
@@ -119,35 +109,9 @@
             transform: translateY(1px);
             box-shadow: 0 2px 6px rgba(110, 70, 160, 0.18);
         }
-
-        /* ===== 图片装饰样式 ===== */
-        /* 右下角固定小猫装饰 */
-        .decor-cat {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            width: 100px;
-            opacity: 0.85;
-            pointer-events: none;
-            z-index: -1;
-        }
-        /* 左上角爱心装饰 */
-        .decor-heart {
-            position: fixed;
-            left: 15px;
-            top: 120px;
-            width: 70px;
-            opacity: 0.7;
-            pointer-events: none;
-            z-index: -1;
-        }
     </style>
 </head>
 <body>
-    <!-- 页面装饰图片 -->
-    <img class="decor-cat" src="cat.png">
-    <img class="decor-heart" src="heart.png">
-
     <h2>猫谷礼</h2>
 
     <!-- 第一组 -->
