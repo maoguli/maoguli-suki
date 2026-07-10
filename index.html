@@ -12,50 +12,102 @@
             box-sizing: border-box;
         }
         body {
-            /* 修改为浅粉色背景，柔和不刺眼 */
-            background: #ffe6f0;
-            padding: 40px 20px;
+            /* 渐变粉色动态背景 */
+            background: linear-gradient(135deg, #ffe6f0, #ffd6e7);
+            background-size: 200% 200%;
+            animation: bgFlow 12s ease infinite;
+            min-height: 100vh;
+            padding: 40px 15px;
+            font-family: "Microsoft YaHei", sans-serif;
         }
+        /* 背景缓慢流动动画 */
+        @keyframes bgFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         h2 {
             text-align: center;
-            font-size: 26px;
-            color: #639;
-            margin-bottom: 40px;
-        }
-        /* 分组容器 */
-        .group-wrap {
+            font-size: 30px;
+            /* 渐变标题文字 */
+            background: linear-gradient(90deg, #96c, #c69);
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
             margin-bottom: 50px;
+            text-shadow: 0 2px 10px rgba(153, 102, 204, 0.2);
         }
-        /* 分组小标题 */
+
+        /* 分组容器 白色卡片美化 */
+        .group-wrap {
+            max-width: 900px;
+            margin: 0 auto 40px auto;
+            background: #ffffff;
+            padding: 30px 20px;
+            border-radius: 18px;
+            box-shadow: 0 6px 22px rgba(170, 110, 160, 0.12);
+            transition: all 0.3s ease;
+        }
+        .group-wrap:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(170, 110, 160, 0.2);
+        }
+
+        /* 分组小标题 加左右分割线装饰 */
         .group-title {
-            font-size: 20px;
-            color: #724;
+            font-size: 22px;
+            color: #963;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             font-weight: 600;
+            position: relative;
         }
+        .group-title::before,
+        .group-title::after {
+            content: "";
+            display: inline-block;
+            width: 70px;
+            height: 1px;
+            background: #d8b8cc;
+            vertical-align: middle;
+            margin: 0 14px;
+        }
+
         /* 按钮容器：横向一行排列，自动换行 */
         .btn-box {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
             flex-direction: row;
             flex-wrap: wrap; /* 宽度不够自动换行 */
         }
+
         .audio-btn {
-            padding: 12px 24px;
+            padding: 13px 18px;
             font-size: 16px;
             border: none;
-            border-radius: 8px;
-            background: #639;
+            border-radius: 12px;
+            /* 紫粉渐变按钮 */
+            background: linear-gradient(135deg, #739, #95b);
             color: white;
             cursor: pointer;
-            width: 220px;
-            transition: background 0.2s;
+            width: min(220px, 44%);
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 10px rgba(110, 70, 160, 0.2);
+            letter-spacing: 1px;
         }
+        /* 悬浮效果：上浮+变亮+发光阴影 */
         .audio-btn:hover {
-            background: #84a;
+            background: linear-gradient(135deg, #84a, #a6c);
+            transform: translateY(-3px);
+            box-shadow: 0 0 14px #c8b8e0, 0 6px 16px rgba(110, 70, 160, 0.28);
+        }
+        /* 点击按压回弹 */
+        .audio-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(110, 70, 160, 0.18);
         }
     </style>
 </head>
@@ -98,7 +150,7 @@
 
     <!-- 音频标签 -->
     <audio id="audio1" src="sound1.mp3">
-<audio id="audio12" src="痴汉笑.mp3">
+    <audio id="audio12" src="痴汉笑.mp3">
     <audio id="audio2" src="你喵喵你个咪咪.mp3">
     <audio id="audio3" src="你给我爬.mp3">
     <audio id="audio4" src="auv.mp3">
@@ -108,7 +160,7 @@
     <audio id="audio8" src="我讨厌你们.mp3">
     <audio id="audio9" src="哈气1.mp3">
     <audio id="audio10" src="哈气2.mp3">
-<audio id="audio11" src="咕咕嘎嘎.mp3">
+    <audio id="audio11" src="咕咕嘎嘎.mp3">
 
 
     <script>
