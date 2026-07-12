@@ -115,25 +115,35 @@
             width: min(220px, 44%);
             font-weight: bold;
         }
-        .loop-single {
+        /* 单次播放 */
+        .mode-once {
+            background: linear-gradient(135deg, #3b8, #5da);
+        }
+        .mode-once:hover {
+            background: linear-gradient(135deg, #4c9, #6eb);
+        }
+        /* 单曲循环 */
+        .mode-single {
             background: linear-gradient(135deg, #28a, #4bd);
         }
-        .loop-single:hover {
+        .mode-single:hover {
             background: linear-gradient(135deg, #39b, #5ce);
         }
-        .loop-random {
+        /* 随机循环 */
+        .mode-random {
             background: linear-gradient(135deg, #c79, #d6a);
         }
-        .loop-random:hover {
+        .mode-random:hover {
             background: linear-gradient(135deg, #d8a, #e7b);
         }
+        /* 停止按钮 */
         .stop-btn {
             background: linear-gradient(135deg, #d44, #f66);
         }
         .stop-btn:hover {
             background: linear-gradient(135deg, #e55, #f88);
         }
-        /* 当前激活模式高亮 */
+        /* 当前激活模式高亮边框 */
         .active-mode {
             box-shadow: 0 0 0 3px #333 !important;
         }
@@ -142,12 +152,13 @@
 <body>
     <h2>猫谷礼</h2>
 
-    <!-- 模式选择控制区 -->
+    <!-- 播放模式选择控制区 -->
     <div class="group-wrap">
         <h3 class="group-title">播放模式选择</h3>
         <div class="btn-box">
-            <button class="audio-btn global-btn loop-single" id="btnSingle" onclick="setSingleLoop()">单曲循环</button>
-            <button class="audio-btn global-btn loop-random" id="btnRandom" onclick="setRandomLoop()">随机循环</button>
+            <button class="audio-btn global-btn mode-once" id="btnOnce" onclick="setOncePlay()">单次播放</button>
+            <button class="audio-btn global-btn mode-single" id="btnSingle" onclick="setSingleLoop()">单曲循环</button>
+            <button class="audio-btn global-btn mode-random" id="btnRandom" onclick="setRandomLoop()">随机循环</button>
             <button class="audio-btn global-btn stop-btn" id="btnStop" onclick="stopAllPlay()">停止全部播放</button>
         </div>
     </div>
@@ -201,10 +212,10 @@
 
     <script>
         let currentAudio = null;
-        // 播放模式：none / single / random
+        // 四种模式：none / once / single / random
         let playMode = "none";
-        // 单曲循环保存当前选中音频ID
-        let singleLoopId = "";
+        // 当前选中音效ID
+        let targetAudioId = "";
         // 全部音频列表
         const allAudioIds = [
             'audio1', 'audio12', 'audio2', 'audio3', 'audio4', 'audio11',
@@ -212,12 +223,15 @@
             'audio9', 'audio10'
         ];
 
-        // 更新按钮高亮状态
+        // 更新模式按钮高亮
         function updateModeBtn() {
+            document.getElementById("btnOnce").classList.remove("active-mode");
             document.getElementById("btnSingle").classList.remove("active-mode");
             document.getElementById("btnRandom").classList.remove("active-mode");
             document.getElementById("btnStop").classList.remove("active-mode");
-            if (playMode === "single") {
+            if (playMode === "once") {
+                document.getElementById("btnOnce").classList.add("active-mode");
+            } else if (playMode === "single") {
                 document.getElementById("btnSingle").classList.add("active-mode");
             } else if (playMode === "random") {
                 document.getElementById("btnRandom").classList.add("active-mode");
@@ -226,7 +240,7 @@
             }
         }
 
-        // 清空当前播放音频监听、停止
+        // 清空当前音频、移除监听、停止播放
         function clearCurrentAudio() {
             if (currentAudio) {
                 currentAudio.pause();
@@ -236,45 +250,59 @@
             }
         }
 
-        // 停止全部播放，切换为无模式
+        // 停止全部播放，重置为无模式
         function stopAllPlay() {
             playMode = "none";
-            singleLoopId = "";
+            targetAudioId = "";
             clearCurrentAudio();
             updateModeBtn();
         }
 
-        // 设置单曲循环模式
+        // 设置：单次播放（播一遍停止）
+        function setOncePlay() {
+            playMode = "once";
+            updateModeBtn();
+            if (targetAudioId) playOnceAudio();
+        }
+
+        // 设置：单曲循环
         function setSingleLoop() {
             playMode = "single";
             updateModeBtn();
-            // 如果有选中音频，立刻循环播放
-            if (singleLoopId) {
-                playSingleLoopAudio();
-            }
+            if (targetAudioId) playSingleLoopAudio();
         }
 
-        // 设置随机循环模式
+        // 设置：随机循环
         function setRandomLoop() {
             playMode = "random";
-            singleLoopId = "";
+            targetAudioId = "";
             clearCurrentAudio();
             updateModeBtn();
             playNextRandom();
         }
 
-        // 点击音效按钮：切换为单曲循环该音频
+        // 点击下方音效按钮，默认切换为单次播放
         function playAudio(id) {
-            singleLoopId = id;
-            playMode = "single";
+            targetAudioId = id;
+            playMode = "once";
             updateModeBtn();
-            playSingleLoopAudio();
+            playOnceAudio();
         }
 
-        // 单曲循环播放逻辑
+        // 单次播放逻辑（播放结束不重复）
+        function playOnceAudio() {
+            clearCurrentAudio();
+            const audio = document.getElementById(targetAudioId);
+            if (!audio) return;
+            currentAudio = audio;
+            audio.onended = null;
+            audio.play().catch(e => console.log("播放失败", e));
+        }
+
+        // 单曲循环逻辑（播放完自动重播）
         function playSingleLoopAudio() {
             clearCurrentAudio();
-            const audio = document.getElementById(singleLoopId);
+            const audio = document.getElementById(targetAudioId);
             if (!audio) return;
             currentAudio = audio;
             audio.onended = () => {
@@ -295,9 +323,7 @@
             const audio = document.getElementById(aid);
             currentAudio = audio;
             audio.onended = () => {
-                if (playMode === "random") {
-                    playNextRandom();
-                }
+                if (playMode === "random") playNextRandom();
             };
             audio.play().catch(e => console.log("播放失败", e));
         }
