@@ -112,11 +112,19 @@
 
         /* 全局控制按钮特殊样式，区分普通音效按钮 */
         .global-btn {
-            background: linear-gradient(135deg, #c79, #d6a);
             width: min(220px, 44%);
             font-weight: bold;
         }
-        .global-btn:hover {
+        .loop-single {
+            background: linear-gradient(135deg, #28a, #4bd);
+        }
+        .loop-single:hover {
+            background: linear-gradient(135deg, #39b, #5ce);
+        }
+        .loop-random {
+            background: linear-gradient(135deg, #c79, #d6a);
+        }
+        .loop-random:hover {
             background: linear-gradient(135deg, #d8a, #e7b);
         }
         .stop-btn {
@@ -125,18 +133,22 @@
         .stop-btn:hover {
             background: linear-gradient(135deg, #e55, #f88);
         }
+        /* 当前激活模式高亮 */
+        .active-mode {
+            box-shadow: 0 0 0 3px #333 !important;
+        }
     </style>
 </head>
 <body>
     <h2>猫谷礼</h2>
 
-    <!-- 全局控制卡片：单次随机 / 自动循环 / 停止 -->
+    <!-- 模式选择控制区 -->
     <div class="group-wrap">
-        <h3 class="group-title">全局控制</h3>
+        <h3 class="group-title">播放模式选择</h3>
         <div class="btn-box">
-            <button class="audio-btn global-btn" onclick="randomPlayAll()">单次随机播放</button>
-            <button class="audio-btn global-btn" onclick="startAutoRandom()">自动随机循环</button>
-            <button class="audio-btn global-btn stop-btn" onclick="stopAutoRandom()">停止全部播放</button>
+            <button class="audio-btn global-btn loop-single" id="btnSingle" onclick="setSingleLoop()">单曲循环</button>
+            <button class="audio-btn global-btn loop-random" id="btnRandom" onclick="setRandomLoop()">随机循环</button>
+            <button class="audio-btn global-btn stop-btn" id="btnStop" onclick="stopAllPlay()">停止全部播放</button>
         </div>
     </div>
 
@@ -187,100 +199,111 @@
     <audio id="audio10" src="哈气2.mp3">
     <audio id="audio11" src="咕咕嘎嘎.mp3">
 
-
     <script>
         let currentAudio = null;
-        // 标记是否开启自动随机循环
-        let autoLoopMode = false;
-        // 存放所有音频ID，新增音频只需在这里添加id即可自动参与随机
+        // 播放模式：none / single / random
+        let playMode = "none";
+        // 单曲循环保存当前选中音频ID
+        let singleLoopId = "";
+        // 全部音频列表
         const allAudioIds = [
             'audio1', 'audio12', 'audio2', 'audio3', 'audio4', 'audio11',
             'audio5', 'audio6', 'audio7', 'audio8',
             'audio9', 'audio10'
         ];
 
-        // 原有单条播放函数
-        function playAudio(id) {
-            // 手动点按钮直接打断自动循环
-            autoLoopMode = false;
-            const audio = document.getElementById(id);
-            if (!audio) {
-                console.log("找不到音频文件：" + id);
-                return;
+        // 更新按钮高亮状态
+        function updateModeBtn() {
+            document.getElementById("btnSingle").classList.remove("active-mode");
+            document.getElementById("btnRandom").classList.remove("active-mode");
+            document.getElementById("btnStop").classList.remove("active-mode");
+            if (playMode === "single") {
+                document.getElementById("btnSingle").classList.add("active-mode");
+            } else if (playMode === "random") {
+                document.getElementById("btnRandom").classList.add("active-mode");
+            } else {
+                document.getElementById("btnStop").classList.add("active-mode");
             }
-            // 切换音频停止上一段
-            if(currentAudio && currentAudio !== audio){
+        }
+
+        // 清空当前播放音频监听、停止
+        function clearCurrentAudio() {
+            if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
-                // 移除旧音频播放结束监听
                 currentAudio.onended = null;
-            }
-            if(audio.paused){
-                audio.play().catch(err=>{
-                    console.log("播放失败：",err);
-                    alert("点击页面任意位置后再点按钮！");
-                });
-                currentAudio = audio;
-            }else{
-                audio.pause();
                 currentAudio = null;
             }
         }
 
-        // 单次随机播放
-        function randomPlayAll() {
-            autoLoopMode = false;
-            const randomIndex = Math.floor(Math.random() * allAudioIds.length);
-            const randomAudioId = allAudioIds[randomIndex];
-            playAudio(randomAudioId);
+        // 停止全部播放，切换为无模式
+        function stopAllPlay() {
+            playMode = "none";
+            singleLoopId = "";
+            clearCurrentAudio();
+            updateModeBtn();
         }
 
-        // 开启自动循环随机
-        function startAutoRandom() {
-            autoLoopMode = true;
+        // 设置单曲循环模式
+        function setSingleLoop() {
+            playMode = "single";
+            updateModeBtn();
+            // 如果有选中音频，立刻循环播放
+            if (singleLoopId) {
+                playSingleLoopAudio();
+            }
+        }
+
+        // 设置随机循环模式
+        function setRandomLoop() {
+            playMode = "random";
+            singleLoopId = "";
+            clearCurrentAudio();
+            updateModeBtn();
             playNextRandom();
         }
 
-        // 停止全部播放+关闭自动循环
-        function stopAutoRandom() {
-            autoLoopMode = false;
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-                currentAudio.onended = null;
-                currentAudio = null;
-            }
+        // 点击音效按钮：切换为单曲循环该音频
+        function playAudio(id) {
+            singleLoopId = id;
+            playMode = "single";
+            updateModeBtn();
+            playSingleLoopAudio();
         }
 
-        // 自动模式：播放下一首随机音效
-        function playNextRandom() {
-            if (!autoLoopMode) return;
-            // 随机取一条音频
-            const randomIndex = Math.floor(Math.random() * allAudioIds.length);
-            const aid = allAudioIds[randomIndex];
-            const audio = document.getElementById(aid);
-
-            // 停止上一首
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-                currentAudio.onended = null;
-            }
+        // 单曲循环播放逻辑
+        function playSingleLoopAudio() {
+            clearCurrentAudio();
+            const audio = document.getElementById(singleLoopId);
+            if (!audio) return;
             currentAudio = audio;
+            audio.onended = () => {
+                if (playMode === "single") {
+                    audio.currentTime = 0;
+                    audio.play().catch(e => console.log("播放失败", e));
+                }
+            };
+            audio.play().catch(e => console.log("播放失败", e));
+        }
 
-            // 播放完毕自动调用下一首
-            audio.onended = function() {
-                if (autoLoopMode) {
+        // 随机循环下一首
+        function playNextRandom() {
+            if (playMode !== "random") return;
+            clearCurrentAudio();
+            const randomIdx = Math.floor(Math.random() * allAudioIds.length);
+            const aid = allAudioIds[randomIdx];
+            const audio = document.getElementById(aid);
+            currentAudio = audio;
+            audio.onended = () => {
+                if (playMode === "random") {
                     playNextRandom();
                 }
             };
-
-            audio.play().catch(err => {
-                console.log("自动播放失败：", err);
-                alert("请先点击页面任意位置激活播放权限，再开启自动循环！");
-                autoLoopMode = false;
-            });
+            audio.play().catch(e => console.log("播放失败", e));
         }
+
+        // 初始化默认选中停止
+        updateModeBtn();
     </script>
 </body>
 </html>
