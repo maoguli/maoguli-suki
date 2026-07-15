@@ -2,9 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 关键：手机自适应视口 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>猫谷礼</title>
+    <title>猫谷礼综合站点</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +11,6 @@
             box-sizing: border-box;
         }
         body {
-            /* 渐变粉色动态背景 */
             background: linear-gradient(135deg, #ffe6f0, #ffd6e7);
             background-size: 200% 200%;
             animation: bgFlow 12s ease infinite;
@@ -20,7 +18,6 @@
             padding: 40px 15px;
             font-family: "Microsoft YaHei", sans-serif;
         }
-        /* 背景缓慢流动动画 */
         @keyframes bgFlow {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -30,13 +27,49 @@
         h2 {
             text-align: center;
             font-size: 30px;
-            /* 渐变标题文字 */
             background: linear-gradient(90deg, #96c, #c69);
             -webkit-background-clip: text;
             color: transparent;
             letter-spacing: 3px;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
             text-shadow: 0 2px 10px rgba(153, 102, 204, 0.2);
+        }
+
+        /* 顶部切换标签栏 */
+        .tab-wrap {
+            max-width: 900px;
+            margin: 0 auto 40px auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .tab-btn {
+            padding: 14px 36px;
+            font-size: 18px;
+            border: none;
+            border-radius: 12px;
+            background: #fff;
+            color: #774499;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(170, 110, 160, 0.15);
+            transition: all 0.25s ease;
+        }
+        .tab-btn:hover {
+            background: #f8e6f0;
+            transform: translateY(-2px);
+        }
+        .tab-btn.active-tab {
+            background: linear-gradient(135deg, #739, #95b);
+            color: #fff;
+        }
+
+        /* 页面区块，默认隐藏 */
+        .page-block {
+            display: none;
+        }
+        .page-block.show {
+            display: block;
         }
 
         /* 分组容器 白色卡片美化 */
@@ -54,7 +87,6 @@
             box-shadow: 0 12px 30px rgba(170, 110, 160, 0.2);
         }
 
-        /* 分组小标题 加左右分割线装饰 */
         .group-title {
             font-size: 22px;
             color: #963;
@@ -74,14 +106,13 @@
             margin: 0 14px;
         }
 
-        /* 按钮容器：横向一行排列，自动换行 */
         .btn-box {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 16px;
             flex-direction: row;
-            flex-wrap: wrap; /* 宽度不够自动换行 */
+            flex-wrap: wrap;
         }
 
         .audio-btn {
@@ -89,7 +120,6 @@
             font-size: 16px;
             border: none;
             border-radius: 12px;
-            /* 紫粉渐变按钮 */
             background: linear-gradient(135deg, #739, #95b);
             color: white;
             cursor: pointer;
@@ -98,105 +128,146 @@
             box-shadow: 0 4px 10px rgba(110, 70, 160, 0.2);
             letter-spacing: 1px;
         }
-        /* 悬浮效果：上浮+变亮+发光阴影 */
         .audio-btn:hover {
             background: linear-gradient(135deg, #84a, #a6c);
             transform: translateY(-3px);
             box-shadow: 0 0 14px #c8b8e0, 0 6px 16px rgba(110, 70, 160, 0.28);
         }
-        /* 点击按压回弹 */
         .audio-btn:active {
             transform: translateY(1px);
             box-shadow: 0 2px 6px rgba(110, 70, 160, 0.18);
         }
 
-        /* 全局控制按钮特殊样式，区分普通音效按钮 */
         .global-btn {
             width: min(220px, 44%);
             font-weight: bold;
         }
-        /* 单次播放 */
         .mode-once {
             background: linear-gradient(135deg, #3b8, #5da);
         }
         .mode-once:hover {
             background: linear-gradient(135deg, #4c9, #6eb);
         }
-        /* 单曲循环 */
         .mode-single {
             background: linear-gradient(135deg, #28a, #4bd);
         }
         .mode-single:hover {
             background: linear-gradient(135deg, #39b, #5ce);
         }
-        /* 随机循环 */
         .mode-random {
             background: linear-gradient(135deg, #c79, #d6a);
         }
         .mode-random:hover {
             background: linear-gradient(135deg, #d8a, #e7b);
         }
-        /* 停止按钮 */
         .stop-btn {
             background: linear-gradient(135deg, #d44, #f66);
         }
         .stop-btn:hover {
             background: linear-gradient(135deg, #e55, #f88);
         }
-        /* 当前激活模式高亮边框 */
         .active-mode {
             box-shadow: 0 0 0 3px #333 !important;
+        }
+
+        /* 歌单页面专用样式 */
+        .search-input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid #e0c8d8;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+        .search-input:focus {
+            border-color: #a878b8;
+            box-shadow: 0 0 0 3px rgba(168, 120, 184, 0.2);
+        }
+        .song-text {
+            width: 100%;
+            padding: 12px;
+            background: #f8f0f5;
+            color: #552255;
+            border-radius: 10px;
+            text-align: center;
+            margin: 8px 0;
+        }
+        .page-btn {
+            width: auto !important;
+            padding: 8px 16px;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
-    <h2>猫谷礼</h2>
+    <h2>猫谷礼综合站点</h2>
 
-    <!-- 播放模式选择控制区 -->
-    <div class="group-wrap">
-        <h3 class="group-title">播放模式选择</h3>
-        <div class="btn-box">
-            <button class="audio-btn global-btn mode-once" id="btnOnce" onclick="setOncePlay()">单次播放</button>
-            <button class="audio-btn global-btn mode-single" id="btnSingle" onclick="setSingleLoop()">单曲循环</button>
-            <button class="audio-btn global-btn mode-random" id="btnRandom" onclick="setRandomLoop()">随机循环</button>
-            <button class="audio-btn global-btn stop-btn" id="btnStop" onclick="stopAllPlay()">停止全部播放</button>
+    <!-- 顶部切换标签 -->
+    <div class="tab-wrap">
+        <button class="tab-btn active-tab" onclick="switchPage('soundPage')">音声播放站</button>
+        <button class="tab-btn" onclick="switchPage('listPage')">歌单查询</button>
+    </div>
+
+    <!-- 第一大区块：音声网站（原有全部内容） -->
+    <div id="soundPage" class="page-block show">
+        <div class="group-wrap">
+            <h3 class="group-title">播放模式选择</h3>
+            <div class="btn-box">
+                <button class="audio-btn global-btn mode-once" id="btnOnce" onclick="setOncePlay()">单次播放</button>
+                <button class="audio-btn global-btn mode-single" id="btnSingle" onclick="setSingleLoop()">单曲循环</button>
+                <button class="audio-btn global-btn mode-random" id="btnRandom" onclick="setRandomLoop()">随机循环</button>
+                <button class="audio-btn global-btn stop-btn" id="btnStop" onclick="stopAllPlay()">停止全部播放</button>
+            </div>
+        </div>
+
+        <div class="group-wrap">
+            <h3 class="group-title">经典咏流传</h3>
+            <div class="btn-box">
+                <button class="audio-btn" onclick="playAudio('audio1')">哈哈哈哈哈哈</button>
+                <button class="audio-btn" onclick="playAudio('audio12')">痴汉笑</button>
+                <button class="audio-btn" onclick="playAudio('audio2')">你喵你个咪咪</button>
+                <button class="audio-btn" onclick="playAudio('audio3')">你给我爬</button>
+                <button class="audio-btn" onclick="playAudio('audio4')">auv</button>
+                <button class="audio-btn" onclick="playAudio('audio11')">咕咕嘎嘎</button>
+            </div>
+        </div>
+
+        <div class="group-wrap">
+            <h3 class="group-title">😈</h3>
+            <div class="btn-box">
+                <button class="audio-btn" onclick="playAudio('audio5')">生化危机9😈</button>
+                <button class="audio-btn" onclick="playAudio('audio6')">破防1</button>
+                <button class="audio-btn" onclick="playAudio('audio7')">啊啊啊啊啊啊</button>
+                <button class="audio-btn" onclick="playAudio('audio8')">我讨厌你们</button>
+            </div>
+        </div>
+
+        <div class="group-wrap">
+            <h3 class="group-title">哈气</h3>
+            <div class="btn-box">
+                <button class="audio-btn" onclick="playAudio('audio9')">哈气1</button>
+                <button class="audio-btn" onclick="playAudio('audio10')">哈气2</button>
+            </div>
         </div>
     </div>
 
-    <!-- 第一组 -->
-    <div class="group-wrap">
-        <h3 class="group-title">经典咏流传</h3>
-        <div class="btn-box">
-            <button class="audio-btn" onclick="playAudio('audio1')">哈哈哈哈哈哈</button>
-            <button class="audio-btn" onclick="playAudio('audio12')">痴汉笑</button>
-            <button class="audio-btn" onclick="playAudio('audio2')">你喵你个咪咪</button>
-            <button class="audio-btn" onclick="playAudio('audio3')">你给我爬</button>
-            <button class="audio-btn" onclick="playAudio('audio4')">auv</button>
-            <button class="audio-btn" onclick="playAudio('audio11')">咕咕嘎嘎</button>
+    <!-- 第二大区块：歌单查询（仅展示，无播放功能） -->
+    <div id="listPage" class="page-block">
+        <div class="group-wrap">
+            <h3 class="group-title">歌单查询系统</h3>
+            <input class="search-input" id="songSearch" placeholder="输入歌曲/歌手名称搜索歌单...">
+            <div class="btn-box" style="margin-top:10px;">
+                <button class="audio-btn global-btn mode-random" onclick="searchSong()">搜索</button>
+            </div>
+            <!-- 歌曲结果容器 -->
+            <div id="songResultBox" style="margin-top:30px;"></div>
+            <!-- 分页按钮容器 -->
+            <div class="btn-box" id="pageBox"></div>
         </div>
     </div>
 
-    <!-- 第二组 -->
-    <div class="group-wrap">
-        <h3 class="group-title">😈</h3>
-        <div class="btn-box">
-            <button class="audio-btn" onclick="playAudio('audio5')">生化危机9😈</button>
-            <button class="audio-btn" onclick="playAudio('audio6')">破防1</button>
-            <button class="audio-btn" onclick="playAudio('audio7')">啊啊啊啊啊啊</button>
-            <button class="audio-btn" onclick="playAudio('audio8')">我讨厌你们</button>
-        </div>
-    </div>
-
-    <!-- 第三组 -->
-    <div class="group-wrap">
-        <h3 class="group-title">哈气</h3>
-        <div class="btn-box">
-            <button class="audio-btn" onclick="playAudio('audio9')">哈气1</button>
-            <button class="audio-btn" onclick="playAudio('audio10')">哈气2</button>
-        </div>
-    </div>
-
-    <!-- 音频标签 -->
+    <!-- 音声音频标签 -->
     <audio id="audio1" src="sound1.mp3">
     <audio id="audio12" src="痴汉笑.mp3">
     <audio id="audio2" src="你喵喵你个咪咪.mp3">
@@ -211,19 +282,308 @@
     <audio id="audio11" src="咕咕嘎嘎.mp3">
 
     <script>
+        // ====================== 歌单歌曲数据【在这里添加/修改所有歌名】======================
+        const songList = [
+            { name: "素颜", singer: "许嵩/何曼婷" },
+            { name: "暖暖", singer: "梁静茹" },
+            { name: "夜车", singer: "曾轶可" },
+            { name: "雨爱", singer: "杨丞琳" },
+            { name: "原谅", singer: "张玉华" },
+            { name: "遇到", singer: "颜人中" },
+            { name: "拥抱", singer: "五月天" },
+            { name: "小宇", singer: "张震岳" },
+            { name: "安静", singer: "李圣杰" },
+            { name: "旋木", singer: "王菲" },
+            { name: "心酸", singer: "苏打绿" },
+            { name: "像鱼", singer: "王贰浪" },
+            { name: "虚拟", singer: "陈粒" },
+            { name: "左边", singer: "杨丞琳" },
+            { name: "走马", singer: "陈粒" },
+            { name: "爱情", singer: "莫文蔚" },
+            { name: "淘汰", singer: "陈奕迅" },
+            { name: "谁家", singer: "池鱼" },
+            { name: "唯一", singer: "邓紫棋" },
+            { name: "喂猪", singer: "MJ耶" },
+            { name: "人质", singer: "张惠妹" },
+            { name: "宝贝", singer: "张悬" },
+            { name: "借我", singer: "谢春花" },
+            { name: "江南", singer: "林俊杰" },
+            { name: "记得", singer: "林俊杰" },
+            { name: "蝴蝶", singer: "---" },
+            { name: "飞蛾", singer: "---" },
+            { name: "幻听", singer: "许嵩" },
+            { name: "花海", singer: "周杰伦" },
+            { name: "绿光", singer: "孙燕姿" },
+            { name: "遇见", singer: "孙燕姿" },
+            { name: "青柠", singer: "徐秉龙/桃十五" },
+            { name: "蠢货", singer: "喻言" },
+            { name: "倒带", singer: "蔡依林" },
+            { name: "稻香", singer: "周杰伦" },
+            { name: "东西", singer: "---" },
+            { name: "当你", singer: "---" },
+            { name: "红豆", singer: "方大同" },
+            { name: "大眠", singer: "王心凌" },
+            { name: "大鱼", singer: "周深" },
+            { name: "冻结", singer: "林俊杰" },
+            { name: "白羊", singer: "徐秉龙/沈以诚" },
+            { name: "喜欢", singer: "张悬" },
+            { name: "暧昧", singer: "杨丞琳" },
+            { name: "半壶纱", singer: "刘珂矣" },
+            { name: "差三岁", singer: "Jam" },
+            { name: "吵架歌", singer: "汪苏泷" },
+            { name: "七月上", singer: "Jam" },
+            { name: "青花瓷", singer: "周杰伦" },
+            { name: "七里香", singer: "周杰伦" },
+            { name: "锦鲤抄", singer: "---" },
+            { name: "可能否", singer: "木小雅" },
+            { name: "庐州月", singer: "许嵩" },
+            { name: "浪漫爱", singer: "江语晨" },
+            { name: "好想你", singer: "苏打绿" },
+            { name: "胡广生", singer: "任素汐" },
+            { name: "简单爱", singer: "---" },
+            { name: "苏州河", singer: "---" },
+            { name: "水星记", singer: "郭顶" },
+            { name: "说爱我", singer: "梁一贞" },
+            { name: "狮子座", singer: "曾轶可" },
+            { name: "日不落", singer: "蔡依林" },
+            { name: "若把你", singer: "Kirsty刘瑾睿" },
+            { name: "我不配", singer: "---" },
+            { name: "我知道", singer: "By2" },
+            { name: "我要你", singer: "任素汐" },
+            { name: "太聪明", singer: "陈绮贞" },
+            { name: "说爱你", singer: "蔡依林" },
+            { name: "跳楼机", singer: "---" },
+            { name: "他不懂", singer: "张杰" },
+            { name: "童话镇", singer: "---" },
+            { name: "甜甜的", singer: "---" },
+            { name: "我会等", singer: "徐良" },
+            { name: "晚安喵", singer: "---" },
+            { name: "外婆桥", singer: "任然" },
+            { name: "最天使", singer: "曾轶可" },
+            { name: "怎么办", singer: "---" },
+            { name: "追光者", singer: "岑宁儿" },
+            { name: "小情歌", singer: "苏打绿" },
+            { name: "想自由", singer: "王安宁" },
+            { name: "小星星", singer: "汪苏泷" },
+            { name: "小幸运", singer: "田馥甄" },
+            { name: "有点甜", singer: "汪苏泷" },
+            { name: "胆小鬼", singer: "梁咏琪" },
+            { name: "樱花草", singer: "Sweety" },
+            { name: "欧若拉", singer: "张韶涵" },
+            { name: "梦里花", singer: "张韶涵" },
+            { name: "明明就", singer: "---" },
+            { name: "大笨钟", singer: "---" },
+            { name: "带我走", singer: "杨丞琳" },
+            { name: "盗将行", singer: "花粥" },
+            { name: "恶作剧", singer: "林依晨" },
+            { name: "不煽情", singer: "许嵩" },
+            { name: "After17", singer: "陈绮贞" },
+            { name: "Lover B", singer: "---" },
+            { name: "爱情转移", singer: "陈奕迅" },
+            { name: "爱的魔法", singer: "---" },
+            { name: "不要说话", singer: "陈奕迅" },
+            { name: "斑马斑马", singer: "宋冬野" },
+            { name: "白马非马", singer: "许嵩" },
+            { name: "半城烟沙", singer: "许嵩" },
+            { name: "告白气球", singer: "周杰伦" },
+            { name: "勾指起誓", singer: "洛天依Official" },
+            { name: "理想三旬", singer: "陈鸿宇" },
+            { name: "灰色头像", singer: "许嵩" },
+            { name: "霜雪千年", singer: "洛天依Official" },
+            { name: "烟花易冷", singer: "---" },
+            { name: "有何不可", singer: "许嵩" },
+            { name: "想象之中", singer: "许嵩" },
+            { name: "星座书上", singer: "许嵩" },
+            { name: "夏天的风", singer: "---" },
+            { name: "心如止水", singer: "---" },
+            { name: "纸短情长", singer: "---" },
+            { name: "时间煮雨", singer: "郁可唯" },
+            { name: "我的秘密", singer: "邓紫棋" },
+            { name: "乌梅子酱", singer: "李荣浩" },
+            { name: "兔子先生", singer: "---" },
+            { name: "棠梨煎雪", singer: "银临" },
+            { name: "桥豆麻袋", singer: "陈粒" },
+            { name: "你若成风", singer: "许嵩" },
+            { name: "那么骄傲", singer: "金海心" },
+            { name: "春风十里", singer: "鹿先森乐队" },
+            { name: "匆匆那年", singer: "王菲" },
+            { name: "明天，你好", singer: "---" },
+            { name: "123木头人", singer: "黑Girl" },
+            { name: "算什么男人", singer: "---" },
+            { name: "你给我听好", singer: "陈奕迅" },
+            { name: "奇妙能力歌", singer: "陈粒" },
+            { name: "其实都没有", singer: "杨宗纬" },
+            { name: "认真地老去", singer: "张希/曹方" },
+            { name: "握不住的他", singer: "林俊杰" },
+            { name: "突然好想你", singer: "五月天" },
+            { name: "我的歌声里", singer: "曲婉婷" },
+            { name: "背对背拥抱", singer: "林俊杰" },
+            { name: "反方向的钟", singer: "周杰伦" },
+            { name: "盛夏的果实", singer: "莫文蔚" },
+            { name: "伤心太平洋", singer: "任贤齐" },
+            { name: "私奔到月球", singer: "陈绮贞/五月天" },
+            { name: "走在冷风中", singer: "刘思涵" },
+            { name: "心愿便利贴", singer: "元若蓝" },
+            { name: "小手拉大手", singer: "梁静茹" },
+            { name: "一直很安静", singer: "阿桑" },
+            { name: "隐形的翅膀", singer: "张韶涵" },
+            { name: "东京不太热", singer: "封茗囧菌" },
+            { name: "第二杯半价", singer: "纳豆nado" },
+            { name: "被驯服的象", singer: "蔡健雅" },
+            { name: "流着泪说分手", singer: "---" },
+            { name: "化身孤岛的鲸", singer: "周深" },
+            { name: "说好的幸福呢", singer: "周杰伦" },
+            { name: "我是你的小狗", singer: "西彬" },
+            { name: "阿拉斯加海湾", singer: "蓝心羽" },
+            { name: "祝我生日快乐", singer: "温岚" },
+            { name: "这条小鱼在乎", singer: "---" },
+            { name: "遥不可及的你", singer: "花粥" },
+            { name: "有可能的夜晚", singer: "曾轶可" },
+            { name: "always online", singer: "林俊杰" },
+            { name: "当我唱起这首歌", singer: "小贱" },
+            { name: "白月光与朱砂痣", singer: "大籽" },
+            { name: "还想听你的故事", singer: "谢春花" },
+            { name: "和宇宙的温柔关联", singer: "房东的猫" },
+            { name: "给我一首歌的时间", singer: "周杰伦" },
+            { name: "我的悲伤是水做的", singer: "洛天依Official" },
+            { name: "在加纳共和国离婚", singer: "菲道尔" },
+            { name: "我在纽约打电话给你", singer: "魏如萱" },
+            { name: "亲爱的你怎么不在身边", singer: "江美琪" },
+            { name: "原谅我就是这样的女生", singer: "蔡思雨" },
+            { name: "if", singer: "---" },
+            { name: "千本樱", singer: "---" },
+            { name: "忏悔录", singer: "---" },
+            { name: "PLANET", singer: "---" },
+            { name: "magnet", singer: "---" },
+            { name: "爱言叶1", singer: "初音ミク" },
+            { name: "爱言叶2", singer: "初音ミク" },
+            { name: "爱言叶3", singer: "初音ミク" },
+            { name: "爱言叶4", singer: "初音ミク" },
+            { name: "A little love", singer: "---" },
+            { name: "打上花火", singer: "米津玄师" },
+            { name: "活动小丑", singer: "初音ミク" },
+            { name: "summertime", singer: "---" },
+            { name: "Zero Gravity", singer: "---" },
+            { name: "City of stars", singer: "---" },
+            { name: "Proud of you", singer: "---" },
+            { name: "だ君に晴れ", singer: "---" },
+            { name: "#超絶かわいい", singer: "---" },
+            { name: "For フルーツバスケット", singer: "---" },
+            // 新增歌曲直接复制下面一行，修改名称、歌手即可
+            // { name: "新歌名称", singer: "歌手名" },
+        ];
+        // =================================================================================
+
+        // 分页配置
+        const pageSize = 25;
+        let currentPage = 1;
+        let filterSongData = [];
+
+        // 切换页面核心函数
+        function switchPage(pageId) {
+            stopAllPlay();
+            document.querySelectorAll('.page-block').forEach(block => {
+                block.classList.remove('show');
+            });
+            document.getElementById(pageId).classList.add('show');
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+            });
+            event.target.classList.add('active-tab');
+
+            // 切换到歌单页面自动加载全部歌曲
+            if(pageId === 'listPage'){
+                filterSongData = [...songList];
+                currentPage = 1;
+                renderSongList();
+            }
+        }
+
+        // 渲染歌曲+分页
+        function renderSongList(){
+            const resultBox = document.getElementById('songResultBox');
+            const pageBox = document.getElementById('pageBox');
+            resultBox.innerHTML = "";
+            pageBox.innerHTML = "";
+
+            const total = filterSongData.length;
+            if (total === 0) {
+                resultBox.innerHTML = "<p style='color:#999;text-align:center;'>暂无歌曲</p>";
+                return;
+            }
+
+            // 截取当前页数据
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const pageData = filterSongData.slice(start, end);
+
+            pageData.forEach(song => {
+                const div = document.createElement("div");
+                div.className = "song-text";
+                div.innerText = `${song.name}-${song.singer}`;
+                resultBox.appendChild(div);
+            });
+
+            // 生成分页按钮
+            const totalPage = Math.ceil(total / pageSize);
+            if(totalPage > 1){
+                // 上一页
+                const prevBtn = document.createElement('button');
+                prevBtn.className = "audio-btn page-btn";
+                prevBtn.innerText = "上一页";
+                prevBtn.disabled = currentPage === 1;
+                prevBtn.onclick = () => {
+                    currentPage--;
+                    renderSongList();
+                };
+                pageBox.appendChild(prevBtn);
+
+                // 页码文字
+                const tip = document.createElement('span');
+                tip.style.padding = "0 12px";
+                tip.style.lineHeight = "42px";
+                tip.innerText = `第${currentPage}/${totalPage}页`;
+                pageBox.appendChild(tip);
+
+                // 下一页
+                const nextBtn = document.createElement('button');
+                nextBtn.className = "audio-btn page-btn";
+                nextBtn.innerText = "下一页";
+                nextBtn.disabled = currentPage === totalPage;
+                nextBtn.onclick = () => {
+                    currentPage++;
+                    renderSongList();
+                };
+                pageBox.appendChild(nextBtn);
+            }
+        }
+
+        // 歌单搜索功能
+        function searchSong() {
+            const keyword = document.getElementById('songSearch').value.trim().toLowerCase();
+            // 空关键词：展示全部歌曲
+            if (!keyword) {
+                filterSongData = [...songList];
+            } else {
+                // 有关键词：模糊筛选
+                filterSongData = songList.filter(song =>
+                    song.name.toLowerCase().includes(keyword) || song.singer.toLowerCase().includes(keyword)
+                );
+            }
+            currentPage = 1;
+            renderSongList();
+        }
+
+        // ========== 下方是你原有音声播放全部逻辑，无需改动 ==========
         let currentAudio = null;
-        // 四种模式：none / once / single / random
         let playMode = "none";
-        // 当前选中音效ID
         let targetAudioId = "";
-        // 全部音频列表
         const allAudioIds = [
             'audio1', 'audio12', 'audio2', 'audio3', 'audio4', 'audio11',
             'audio5', 'audio6', 'audio7', 'audio8',
             'audio9', 'audio10'
         ];
 
-        // 更新模式按钮高亮
         function updateModeBtn() {
             document.getElementById("btnOnce").classList.remove("active-mode");
             document.getElementById("btnSingle").classList.remove("active-mode");
@@ -240,7 +600,6 @@
             }
         }
 
-        // 清空当前音频、移除监听、停止播放
         function clearCurrentAudio() {
             if (currentAudio) {
                 currentAudio.pause();
@@ -250,7 +609,6 @@
             }
         }
 
-        // 停止全部播放，重置为无模式
         function stopAllPlay() {
             playMode = "none";
             targetAudioId = "";
@@ -258,21 +616,18 @@
             updateModeBtn();
         }
 
-        // 设置：单次播放（播一遍停止）
         function setOncePlay() {
             playMode = "once";
             updateModeBtn();
             if (targetAudioId) playOnceAudio();
         }
 
-        // 设置：单曲循环
         function setSingleLoop() {
             playMode = "single";
             updateModeBtn();
             if (targetAudioId) playSingleLoopAudio();
         }
 
-        // 设置：随机循环
         function setRandomLoop() {
             playMode = "random";
             targetAudioId = "";
@@ -281,7 +636,6 @@
             playNextRandom();
         }
 
-        // 点击下方音效按钮，默认切换为单次播放
         function playAudio(id) {
             targetAudioId = id;
             playMode = "once";
@@ -289,7 +643,6 @@
             playOnceAudio();
         }
 
-        // 单次播放逻辑（播放结束不重复）
         function playOnceAudio() {
             clearCurrentAudio();
             const audio = document.getElementById(targetAudioId);
@@ -299,7 +652,6 @@
             audio.play().catch(e => console.log("播放失败", e));
         }
 
-        // 单曲循环逻辑（播放完自动重播）
         function playSingleLoopAudio() {
             clearCurrentAudio();
             const audio = document.getElementById(targetAudioId);
@@ -314,7 +666,6 @@
             audio.play().catch(e => console.log("播放失败", e));
         }
 
-        // 随机循环下一首
         function playNextRandom() {
             if (playMode !== "random") return;
             clearCurrentAudio();
@@ -328,7 +679,6 @@
             audio.play().catch(e => console.log("播放失败", e));
         }
 
-        // 初始化默认选中停止
         updateModeBtn();
     </script>
 </body>
